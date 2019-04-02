@@ -62,7 +62,20 @@ for e in range(0, number_elements):
         # compute b_k
 
         for j in range(0,3):
-            # a[nodes_l2g[e,i], nodes_l2g[e,j]] += a_k(i,j)
-            a[nodes_l2g[e, i], nodes_l2g[e, j]] += 1
+            a[nodes_l2g[e,i], nodes_l2g[e,j]] += a_k(i,j)
+            # a[nodes_l2g[e, i], nodes_l2g[e, j]] += 1
+
+
+for i in range(0,number_elements):
+    print_str = ""
+    for j in range(0,number_elements):
+        x = str(a[i,j])
+        if x == "0.0":
+            x = " "
+        else:
+            # x = "*"
+            pass
+        print_str += x
+    print(print_str)
 
 
