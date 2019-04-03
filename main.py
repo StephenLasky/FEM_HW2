@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import functions
 
 # This is the main file for the FEM HW # 2
 
@@ -18,26 +19,19 @@ nodes_l2g = np.zeros((number_elements, 3), dtype=int) - 1
 
 i = 0
 e = 0
-while i < number_nodes - int(math.sqrt(number_nodes)):      # skip 'last' node vertically
-    if (i + 1) % int(math.sqrt(number_nodes)) == 0:         # skip 'last' node horizontally
-        i += 1
-        continue
+while i < number_nodes:
+    e = functions.get_associated_element(i,N)
 
-    a = i
-    b = int(math.sqrt(number_nodes)) + a
+    assignments = [0,1,2,0,1,2]
+    es = [e, e-1, e-2-2*N, e-1-2*N, e-2*N, e+1]
 
-    # construct lower triangle
-    nodes_l2g[e, 0] = a
-    nodes_l2g[e, 1] = b+1
-    nodes_l2g[e, 2] = b
+    for j in range(0,6):
+        e = es[j]
+        assign = assignments[j]
 
-    # construct upper triangle
-    nodes_l2g[e + 1, 0] = a
-    nodes_l2g[e + 1, 1] = b+1
-    nodes_l2g[e + 1, 2] = a+1
+        if e >= 0 and e < number_elements:
+            nodes_l2g[e, assign] = i
 
-    # iteration here
-    e += 2
     i += 1
 
 print(nodes_l2g)
@@ -65,7 +59,6 @@ for e in range(0, number_elements):
 
         for j in range(0,3):
             a[nodes_l2g[e,i], nodes_l2g[e,j]] += a_k(i,j)
-            # a[nodes_l2g[e, i], nodes_l2g[e, j]] += 1
 
 
 for i in range(0,number_elements):
