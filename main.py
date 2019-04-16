@@ -2,9 +2,7 @@ import math
 import numpy as np
 import functions
 
-# NUM_TRIALS = 1000
-# for trial in range(0,NUM_TRIALS):
-
+# ATTEMPT # 3: In this attempt, we try to make use of the interpolation stuff as seen in lecture notes #6.
 
 # This is the main file for the FEM HW # 2
 
