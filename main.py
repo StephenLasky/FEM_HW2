@@ -7,7 +7,7 @@ import functions
 # This is the main file for the FEM HW # 2
 
 # STEP # 1. INPUTS: f, omega, coefficients
-N  = 9         # this code assumes that N is a real number with a root that is an integer
+N  = 9         # this code assumes that N is a real number with a root that is an integer, N is the total number of squares!
 
 number_elements = N * 2
 number_nodes = int( (math.sqrt(N) + 1) ** 2 )
@@ -74,6 +74,19 @@ if N/4 == 4:
     assert nodes_l2g[20,2] == 18
 
 # STEP 3. Compute a_K, b_K
+# define a function to compute phi
+def d_phi_hat(ijk, x1_hat, x2_hat):
+    i,j,k = 0,1,2
+
+    if ijk == i:
+        return np.asarray([0, 1])
+    elif ijk == j:
+        return np.asarray([-1, -1])
+    elif ijk == k:
+        return np.asarray([1,0])
+    else:
+        print("warning: d_phi_hat error!")
+
 # define function to compute a_k
 def a_k(i,j):
     d = [[0,1], [-1,-1], [1,0]]     # derivatives of phi stored as [i,j,k][x1,x2]
