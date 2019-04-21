@@ -34,22 +34,26 @@ def local_coor_to_global(x1_hat, x2_hat, e, nodes_l2g, N):
     L = 1 / math.sqrt(N)    # vertical/horizontal edge length
     J = nodes_l2g[e,1]
 
-    # first assumption: element e is EVEN
-    if e % 2 == 0:
-        x1_base = J % (math.sqrt(N) + 1) * L
+    if e % 2 == 0: # e is EVEN
+        pass
+    else:          # e is odd, triangle is inverted!!!
+        x1_hat = 1 - x1_hat
+        x2_hat = 1 - x2_hat
 
-        R = (math.sqrt(N) + 1) ** 2 - (math.sqrt(N) + 1)
-        J = J - J %(math.sqrt(N) + 1)
+    x1_base = J % (math.sqrt(N) + 1) * L
 
-        R /= (math.sqrt(N) + 1)
-        J /= (math.sqrt(N) + 1)
+    R = (math.sqrt(N) + 1) ** 2 - (math.sqrt(N) + 1)
+    J = J - J %(math.sqrt(N) + 1)
 
-        x2_base = (R-J) * L
+    R /= (math.sqrt(N) + 1)
+    J /= (math.sqrt(N) + 1)
 
-        x1 = x1_base + L * x1_hat
-        x2 = x2_base + L * x2_hat
+    x2_base = (R-J) * L
 
-        return x1, x2
+    x1 = x1_base + L * x1_hat
+    x2 = x2_base + L * x2_hat
+
+    return x1, x2
 
 # generate the local to global nodes matrix using a mesh with N squares (side length sqrt(N))
 def generate_nodes_l2g(N):
