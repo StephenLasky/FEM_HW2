@@ -48,15 +48,14 @@ def a_k(i,j,e):
     x3, y3 = f.local_coor_to_global(x3_hat, y3_hat, e, nodes_l2g, N)
 
     # compute our 'Z' array and B. B is Z^(-1).
-    jacobian = np.asarry([[x2-x1, x3-x1],[y2-y1, y3-y1]])
+    jacobian = np.asarray([[x2-x1, x3-x1],[y2-y1, y3-y1]])
     B = np.linalg.inv(jacobian)
 
     # finally : compute the result!
 
-
     # side-attempt: nevermind the above, for now!
     d_phi_i = np.asarray([ d_phi_hat(i, x1_hat, x2_hat)[0] * B[0, 0] + d_phi_hat(i, x1_hat, x2_hat)[1] * B[1, 0],
-                d_phi_hat(i, x1_hat, x2_hat)[0] * B[0, 1] + d_phi_hat(i, x1_hat, x2_hat)[1] * B[1, 1] ])
+                           d_phi_hat(i, x1_hat, x2_hat)[0] * B[0, 1] + d_phi_hat(i, x1_hat, x2_hat)[1] * B[1, 1] ])
     d_phi_j = np.asarray([d_phi_hat(j, x1_hat, x2_hat)[0] * B[0, 0] + d_phi_hat(j, x1_hat, x2_hat)[1] * B[1, 0],
                           d_phi_hat(j, x1_hat, x2_hat)[0] * B[0, 1] + d_phi_hat(j, x1_hat, x2_hat)[1] * B[1, 1]])
 
@@ -64,18 +63,16 @@ def a_k(i,j,e):
 
     return result
 
-
-
-
-a = np.zeros((number_elements, number_elements))
+a = np.zeros((number_nodes, number_nodes))
 
 for e in range(0, number_elements):
     for i in range(0,3):
         # compute b_k
 
         for j in range(0,3):
-            a[nodes_l2g[e,i], nodes_l2g[e,j]] += a_k(i,j)
+            a[nodes_l2g[e,i], nodes_l2g[e,j]] += 1
 
+print(a)
 
 
 
@@ -86,8 +83,7 @@ for e in range(0, number_elements):
 #         if x == "0.0":
 #             x = " "
 #         else:
-#             # x = "*"
+#             x = "*"
 #             pass
 #         print_str += x
 #     print(print_str)
-#
