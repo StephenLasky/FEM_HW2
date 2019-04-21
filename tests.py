@@ -36,16 +36,85 @@ def local_coor_to_global_test():
         assert x2 == tc[4] + rx2 * L
 
 def generate_nodes_l2g_test():
-    # test N = 16
+    # comprehensive test for N = 9
+    N9_table = [
+        [0, 4, 5],
+        [5, 1, 0],
+        [1, 5, 6],
+        [6, 2, 1],
+
+        [2, 6, 7],
+        [7, 3, 2],
+        [4, 8, 9],
+        [9, 5, 4],
+
+        [5, 9, 10],
+        [10, 6, 5],
+        [6, 10, 11],
+        [11, 7, 6],
+
+        [8, 12, 13],
+        [13, 9, 8],
+        [9, 13, 14],
+        [14, 10, 9],
+
+        [10, 14, 15],
+        [15, 11, 10]
+    ]
+    N = 9
+    nodes_l2g = functions.generate_nodes_l2g(N)
+
+    for e in range(0,18):
+        for i in range(0,3):
+            assert nodes_l2g[e,i] == N9_table[e][i]
+
+    # comprehensive test for N = 16
     N = 16
     nodes_l2g = functions.generate_nodes_l2g(N)
-    assert nodes_l2g[0,0] == 0
-    assert nodes_l2g[0,1] == 5
-    assert nodes_l2g[8,0] == 5
-    assert nodes_l2g[20,0] == 12
-    assert nodes_l2g[20,1] == 17
-    assert nodes_l2g[20,2] == 18
+    N16_table = [
+        [0, 5, 6],
+        [6, 1, 0],
+        [1, 6, 7],
+        [7, 2, 1],
 
+        [2, 7, 8],
+        [8, 3, 2],
+        [3, 8, 9],
+        [9, 4, 3],
+
+        [5, 10, 11],
+        [11, 6, 5],
+        [6, 11, 12],
+        [12, 7, 6],
+
+        [7, 12, 13],
+        [13, 8, 7],
+        [8, 13, 14],
+        [14, 9, 8],
+
+        [10, 15, 16],
+        [16, 11, 10],
+        [11, 16, 17],
+        [17, 12, 11],
+
+        [12, 17, 18],
+        [18, 13, 12],
+        [13, 18, 19],
+        [19, 14, 13],
+
+        [15, 20, 21],
+        [21, 16, 15],
+        [16, 21, 22],
+        [22, 17, 16],
+
+        [17, 22, 23],
+        [23, 18, 17],
+        [18, 23, 24],
+        [24, 19, 18]
+    ]
+    for e in range(0,N*2):
+        for i in range(0,3):
+            assert nodes_l2g[e,i] == N16_table[e][i]
 # tests run here
 local_coor_to_global_test()
 generate_nodes_l2g_test()
