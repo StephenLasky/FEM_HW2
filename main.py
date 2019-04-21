@@ -35,31 +35,34 @@ def d_phi_hat(ijk, x1_hat, x2_hat):
 
 # define function to compute a_k
 # input : local node i, local node j, element e
-if __name__ == '__main__':
-    def a_k(i,j,e):
-        w_hat_g = 1 # weighting variable - we have no idea what this should be.
+def a_k(i,j,e):
+    w_hat_g = 1 # weighting variable - we have no idea what this should be.
 
-        # set up our local coordinates: we might need to change this later?
-        x1_hat, x2_hat, x3_hat = 0, 1, 0
-        y1_hat, y2_hat, y3_hat = 0, 0, 1
+    # set up our local coordinates: we might need to change this later?
+    x1_hat, x2_hat, x3_hat = 0, 1, 0
+    y1_hat, y2_hat, y3_hat = 0, 0, 1
 
-        # get global coordinates
-        x1, y1 = f.local_coor_to_global(x1_hat, y1_hat, e, nodes_l2g, N)
-        x2, y2 = f.local_coor_to_global(x2_hat, y2_hat, e, nodes_l2g, N)
-        x3, y3 = f.local_coor_to_global(x3_hat, y3_hat, e, nodes_l2g, N)
+    # get global coordinates
+    x1, y1 = f.local_coor_to_global(x1_hat, y1_hat, e, nodes_l2g, N)
+    x2, y2 = f.local_coor_to_global(x2_hat, y2_hat, e, nodes_l2g, N)
+    x3, y3 = f.local_coor_to_global(x3_hat, y3_hat, e, nodes_l2g, N)
 
-        # compute our 'Z' array and B. B is Z^(-1).
-        jacobian = np.asarry([[x2-x1, x3-x1],[y2-y1, y3-y1]])
-        B = np.linalg.inv(jacobian)
+    # compute our 'Z' array and B. B is Z^(-1).
+    jacobian = np.asarry([[x2-x1, x3-x1],[y2-y1, y3-y1]])
+    B = np.linalg.inv(jacobian)
 
-        # finally : compute the result!
+    # finally : compute the result!
 
 
-        # side-attempt: nevermind the above, for now!
-        d_phi_i = np.asarray([ d_phi_hat(i, x1_hat, x2_hat)[0] * B[0, 0] + d_phi_hat(i, x1_hat, x2_hat)[1] * B[1, 0],
-                    d_phi_hat(i, x1_hat, x2_hat)[0] * B[0, 1] + d_phi_hat(i, x1_hat, x2_hat)[1] * B[1, 1] ])
-        d_phi_j = np.asarray([d_phi_hat(j, x1_hat, x2_hat)[0] * B[0, 0] + d_phi_hat(j, x1_hat, x2_hat)[1] * B[1, 0],
-                              d_phi_hat(j, x1_hat, x2_hat)[0] * B[0, 1] + d_phi_hat(j, x1_hat, x2_hat)[1] * B[1, 1]])
+    # side-attempt: nevermind the above, for now!
+    d_phi_i = np.asarray([ d_phi_hat(i, x1_hat, x2_hat)[0] * B[0, 0] + d_phi_hat(i, x1_hat, x2_hat)[1] * B[1, 0],
+                d_phi_hat(i, x1_hat, x2_hat)[0] * B[0, 1] + d_phi_hat(i, x1_hat, x2_hat)[1] * B[1, 1] ])
+    d_phi_j = np.asarray([d_phi_hat(j, x1_hat, x2_hat)[0] * B[0, 0] + d_phi_hat(j, x1_hat, x2_hat)[1] * B[1, 0],
+                          d_phi_hat(j, x1_hat, x2_hat)[0] * B[0, 1] + d_phi_hat(j, x1_hat, x2_hat)[1] * B[1, 1]])
+
+    result = np.dot(d_phi_i, d_phi_j)
+
+    return result
 
 
 
