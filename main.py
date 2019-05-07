@@ -24,14 +24,17 @@ nodes_l2g = f.generate_nodes_l2g(N)
 def d_phi_hat(ijk, x1_hat, x2_hat):
     i,j,k = 0,1,2
 
+    z = None
     if ijk == i:
-        return np.asarray([0, 1])
+        z = np.asarray([0, 1])
     elif ijk == j:
-        return np.asarray([-1, -1])
+        z =  np.asarray([-1, -1])
     elif ijk == k:
-        return np.asarray([1,0])
+        z =  np.asarray([1,0])
     else:
         print("warning: d_phi_hat error!")
+
+    return z
 
 # define function to compute a_k
 # input : local node i, local node j, element e
@@ -48,8 +51,28 @@ def a_k(i,j,e):
     x3, y3 = f.local_coor_to_global(x3_hat, y3_hat, e, nodes_l2g, N)
 
     # compute our 'Z' array and B. B is Z^(-1).
-    jacobian = np.asarray([[x2-x1, x3-x1],[y2-y1, y3-y1]])
-    B = np.linalg.inv(jacobian)
+    jacobian = np.abs(np.asarray([[x2-x1, x3-x1],[y2-y1, y3-y1]]))
+    B = np.linalg.inv(np.abs(jacobian))     # take aboslute value of the jacobian
+
+    x_g_hats = [1.0/6, 2.0/3, 1.0/6]
+    y_g_hats = [1.0/6, 1.0/6, 2.0/3]
+    w_g_hat = 1.0 / 6
+
+    result = 0.0
+    for g in range(0,3):
+        x_g_hat = x_g_hats[g]
+        y_g_hat = y_g_hats[g]
+        z = d_phi_hat(j, x_g_hat, y_g_hat).reshape((1,2))
+        z = np.matmul(z, np.matmul(B,B.T))
+        z = np.matmul(z, d_phi_hat(i, x_g_hat, y_g_hat))
+        z *= np.linalg.det(jacobian)
+        result += z
+
+    result *= w_g_hat
+
+    return result
+
+
 
     # finally : compute the result!
 
@@ -70,8 +93,9 @@ for e in range(0, number_elements):
         # compute b_k
 
         for j in range(0,3):
-            a[nodes_l2g[e,i], nodes_l2g[e,j]] += 1
+            a[nodes_l2g[e,i], nodes_l2g[e,j]] += a_k(i,j,e)
 
+np.set_printoptions(linewidth=150)
 print(a)
 
 
