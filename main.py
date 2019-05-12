@@ -7,7 +7,7 @@ import functions as f
 # This is the main file for the FEM HW # 2
 
 # STEP # 1. INPUTS: f, omega, coefficients
-N  = 9         # this code assumes that N is a real number with a root that is an integer, N is the total number of squares!
+N  = 400         # this code assumes that N is a real number with a root that is an integer, N is the total number of squares!
 
 number_elements = N * 2
 number_nodes = int( (math.sqrt(N) + 1) ** 2 )
@@ -87,15 +87,38 @@ def a_k(i,j,e):
     return result
 
 a = np.zeros((number_nodes, number_nodes))
+# create the HISTORY matrix. this is used to debug and figure out what exacty has happened at each spot
+HISTORY = []
+for i in range(0,number_nodes):
+    new_r = []
+    for j in range(0,number_nodes):
+        new_r.append([])
+    HISTORY.append(new_r)
 
+n = int(math.sqrt(N))
 for e in range(0, number_elements):
     for i in range(0,3):
-        # compute b_k
 
-        for j in range(0,3):
-            a[nodes_l2g[e,i], nodes_l2g[e,j]] += a_k(i,j,e)
+        if not f.is_boundary(int(nodes_l2g[e, i]), n):
+            # compute b_k
 
-np.set_printoptions(linewidth=150)
+            for j in range(0,3):
+                if not f.is_boundary(nodes_l2g[e, j], n):
+                    a[nodes_l2g[e, i], nodes_l2g[e, j]] += a_k(i, j, e)
+                    # a[nodes_l2g[e, j], nodes_l2g[e, i]] += a_k(i, j, e)
+                    # a[nodes_l2g[e, i], nodes_l2g[e, j]] += a_k(j, i, e)
+                    # a[nodes_l2g[e, j], nodes_l2g[e, i]] += a_k(j, i, e)
+
+                    v1 = nodes_l2g[e, i]
+                    v2 = nodes_l2g[e, j]
+                    vr = a_k(i, j, e)
+                    HISTORY[v1][v2].append(vr)
+
+print("HIST:", HISTORY[1][1])
+
+
+
+np.set_printoptions(linewidth=1e6, threshold=1e6)
 print(a)
 
 

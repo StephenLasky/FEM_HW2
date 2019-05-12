@@ -28,6 +28,13 @@ def is_edge(i,n):
 
     return top, right, bot, left
 
+# input: global node i, n: edge length (typically sqrt(N))
+def is_boundary(i,n):
+    top, right, bot, left = is_edge(i,n)
+
+    res = top or right or bot or left
+    return res
+
 # takes the coordinates x1, x2 from a global node J, which is the j local node for some element e
 # returns the global coordiantes x1, x2
 def local_coor_to_global(x1_hat, x2_hat, e, nodes_l2g, N):
